@@ -1,0 +1,108 @@
+/* Estilo geral para o contêiner */
+div {
+   font-family: 'Arial', sans-serif;
+   background-color: #585858;
+   margin-top: 50px;
+   padding: 30px;
+   border-radius: 8px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   max-width: 600px;
+   margin-left: auto;
+   margin-right: auto;
+   text-align: center;
+ }
+ 
+ /* Título */
+ h2 {
+   font-size: 2rem;
+   color: #555050;
+   margin-bottom: 20px;
+ }
+ 
+ /* Inputs e botões */
+ input[type="text"] {
+   padding: 10px;
+   width: 80%;
+   margin: 10px 0;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   box-sizing: border-box;
+ }
+ 
+ button {
+   padding: 10px 20px;
+   background-color: #4CAF50;
+   color: white;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+ }
+ 
+ button:hover {
+   background-color: #45a049;
+ }
+ 
+ a {
+   color: #f44336;
+   text-decoration: none;
+   margin-left: 10px;
+   font-size: 0.9rem;
+ }
+ 
+ a:hover {
+   text-decoration: underline;
+ }
+ 
+ /* Lista de contatos */
+ ul {
+   list-style-type: none;
+   padding: 0;
+ }
+ 
+ li {
+   background-color: #8a8a8a;
+   padding: 15px;
+   margin: 10px 0;
+   border-radius: 6px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 1rem;
+   color: #555;
+ }
+ 
+ li button {
+   margin-left: 10px;
+   padding: 6px 12px;
+   background-color: #2196F3;
+   border-radius: 4px;
+   border: none;
+   cursor: pointer;
+   color: white;
+ }
+ 
+ li button:hover {
+   background-color: #0b7dda;
+ }
+ 
+ li button:last-child {
+   background-color: #f44336;
+ }
+ 
+ li button:last-child:hover {
+   background-color: #e53935;
+ }
+ 
+ /* Estilo para inputs de edição */
+ input[type="text"]:focus {
+   border-color: #2196F3;
+   outline: none;
+ }
+ 
+ button:disabled {
+   background-color: #cccccc;
+   cursor: not-allowed;
+ }
+ 
