@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Image, TextInput } from 'react-native';
 
@@ -20,41 +20,42 @@ export default function App() {
   };
 
   const addItem = () => {
-    if (text.trim() === ''){
+    if (text.trim() === '') {
       return;
     }
-  const newItem = {
-    id: Math.random().toString(),
-    text: text.trim()
-  }
-  setItems([...items, newItem]);
-  setText('');
-  console.log(items);
+    const newItem = {
+      id: Math.random().toString(),
+      text: text.trim()
+    }
+    setItems([...items, newItem]);
+    setText('');
+    console.log(items);
   }
   return (
-    
+
     <View style={styles.container}>
-      <TextInput 
-      style={styles.input}
-      value={text}
-      onChargeText={setText}
-      placeholder='Enter text item'
+      <TextInput
+        style={styles.input}
+        value={text}
+        onChangeText={setText}
+        placeholder='Enter text item'
       />
-      <Button 
-      title='add Item'
-      onPress={addItem}
+      <Button
+        title='add Item'
+        onPress={addItem}
       />
+
       <Text style={styles.text}>ola app react native!</Text>
-      <Image 
-        soure={{url: "https://picsum.photo/200"}}
-        style={{widht: 200, height: 200}}
+      <Image
+        soure={{ url: "https://picsum.photo/200" }}
+        style={{ widht: 200, height: 200 }}
       />
 
       <StatusBar style="auto" />
       <Text style={(styles.text)}>Counter: {counter}</Text>
 
       <View style={styles.buttonContainer}>
-        <Button title='Increment' onPress={incrementCounter}/>
+        <Button title='Increment' onPress={incrementCounter} />
         <Button title='descrement' onPress={decrementCounter} />
       </View>
     </View>
@@ -76,5 +77,5 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
   }
- 
+
 });
