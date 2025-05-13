@@ -8,7 +8,7 @@ class List extends Component {
             { id: 0, name: 'caio' },
             { id: 1, name: 'ben' },
             { id: 2, name: 'robert' },
-            { id: 3, neme: 'christinr' }
+            { id: 3, name: 'christinr' }
         ]
     }
 
@@ -22,6 +22,20 @@ class List extends Component {
                 <Text style={styles.text}>
                     Lista de items "clicaveis"
                 </Text>
+                {
+                    this.state.names.map((item, index) => (
+                        <TouchableOpacity 
+                            key={item.id}
+                            style={styles.container}
+                            onPress={() => this.alertItemName(item)}
+                            >
+                                    <Text style={styles.text}>  
+                                        {item.name}
+                                    </Text>
+                            </TouchableOpacity>
+                      
+                    ))
+                }
             </View>
         );
     }
