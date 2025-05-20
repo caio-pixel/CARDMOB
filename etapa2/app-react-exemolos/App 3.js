@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-
-import { StyleSheet, View } from 'react-native';
-import ScrollViewExample from "./components/ScrollViewExample";
+import { StyleSheet, View,  } from 'react-native';
 
 
+import Inputs from "./components/inputs";
 
 export default function App() {
 
 
   return (
     <View style={styles.container}>
-     <ScrollViewExample/>
+     <Inputs/>
     </View>
 
 
