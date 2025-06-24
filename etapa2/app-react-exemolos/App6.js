@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: '#f2f2f2',
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 11,
     borderRadius: 5,
   },
   buttons: {
