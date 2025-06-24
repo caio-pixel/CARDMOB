@@ -1,157 +1,199 @@
 import React, { useState, useEffect } from "react";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, FlatList, Alert } from 'react-native';
+import {StyleSheet,Text,View,TextInput,Button,FlatList,Alert,Image,} from "react-native";
 
-const baseUrl = 'http://10.81.205.16:3000';
+const BASE_URL = "http://10.0.2.2:5000";
 
 export default function App() {
-  const [compras, setCompras] = useState([]);
-  const [item, setItem] = useState('');
-  const [quantidade, setQuantidade] = useState('');
-  const [editId, setEditId] = useState(null);
-  const [editItem, setEditItem] = useState('');
-  const [editQuantidade, setEditQuantidade] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [catalog, setCatalog] = useState([]);
+  const [nome, setNome] = useState("");
+  const [preco, setPreco] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [editandoId, setEditandoId] = useState(null);
+  const [editNome, setEditNome] = useState("");
+  const [editPreco, setEditPreco] = useState("");
+  const [editDescricao, setEditDescricao] = useState("");
 
-  // Buscar todas as compras
-  const fetchCompras = async () => {
-    setLoading(true);
+  const fetchCatalog = async () => {
     try {
-      const response = await fetch(`${baseUrl}/compras`);
-      const data = await response.json();
-      setCompras(data);
+      const res = await fetch(`${BASE_URL}/api/catalog?page=1`);
+      const data = await res.json();
+
+      // Se o backend retornar apenas um array
+      setCatalog(Array.isArray(data) ? data : data.catalog);
     } catch (error) {
-      console.error("Erro ao buscar compras:", error);
-    } finally {
-      setLoading(false);
+      console.error("Erro ao encontra catálogo:", error);
     }
   };
 
   useEffect(() => {
-    fetchCompras();
+    fetchCatalog();
   }, []);
 
-  // CREATE
-  const addCompra = async () => {
-    if (item.trim() === '' || quantidade.trim() === '') return;
+  const adicionarItem = async () => {
+    if (!nome.trim() || !preco.trim() || !descricao.trim()) {
+      Alert.alert("Atenção", "Preencha todos os campos.");
+      return;
+    }
 
     try {
-      const response = await fetch(`${baseUrl}/compras`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: item.trim(), quantidade: parseInt(quantidade) })
+      await fetch(`${BASE_URL}/api/catalog`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nome.trim(),
+          price: parseFloat(preco),
+          description: descricao.trim(),
+        }),
       });
-      if (response.ok) {
-        await fetchCompras();
-        setItem('');
-        setQuantidade('');
-      }
+      setNome("");
+      setPreco("");
+      setDescricao("");
+      fetchCatalog();
     } catch (error) {
-      console.error("Erro ao adicionar compra:", error);
+      console.error("Erro ao adicionar item:", error);
     }
   };
 
-  // UPDATE
-  const updateCompra = async (id) => {
+  const atualizarItem = async (id) => {
+    if (!editNome.trim() || !editPreco.trim() || !editDescricao.trim()) {
+      Alert.alert("Atenção", "Preencha todos os campos.");
+      return;
+    }
+
     try {
-      const response = await fetch(`${baseUrl}/compras/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: editItem, quantidade: parseInt(editQuantidade) })
+      await fetch(`${BASE_URL}/api/catalog/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editNome.trim(),
+          price: parseFloat(editPreco),
+          description: editDescricao.trim(),
+        }),
       });
-      if (response.ok) {
-        await fetchCompras();
-        setEditId(null);
-        setEditItem('');
-        setEditQuantidade('');
-      }
+      setEditandoId(null);
+      setEditNome("");
+      setEditPreco("");
+      setEditDescricao("");
+      fetchCatalog();
     } catch (error) {
-      console.error("Erro ao atualizar compra:", error);
+      console.error("Erro ao atualizar item:", error);
     }
   };
 
-  // DELETE
-  const deleteCompra = async (id) => {
-    Alert.alert(
-      'Excluir',
-      'Deseja realmente excluir este item?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          onPress: async () => {
-            try {
-              const response = await fetch(`${baseUrl}/compras/${id}`, { method: 'DELETE' });
-              if (response.ok) await fetchCompras();
-            } catch (error) {
-              console.error("Erro ao deletar compra:", error);
-            }
+  const deletarItem = (id) => {
+    Alert.alert("Confirmar", "Deseja apagar este item?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Apagar",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await fetch(`${BASE_URL}/api/catalog/${id}`, {
+              method: "DELETE",
+            });
+            fetchCatalog();
+          } catch (error) {
+            console.error("Erro ao deletar item:", error);
           }
-        }
-      ]
-    );
+        },
+      },
+    ]);
   };
 
   const renderItem = ({ item }) => {
-    if (item.id !== editId) {
+    if (item.id === editandoId) {
       return (
-        <View style={styles.item}>
-          <Text>{item.item} - Quantidade: {item.quantidade}</Text>
-          <View style={styles.buttons}>
-            <Button title="Editar" onPress={() => {
-              setEditId(item.id);
-              setEditItem(item.item);
-              setEditQuantidade(String(item.quantidade));
-            }} />
-            <Button title="Excluir" onPress={() => deleteCompra(item.id)} />
-          </View>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.item}>
+        <View style={styles.itemEditando}>
           <TextInput
-            style={styles.editInput}
-            placeholder="Item"
-            value={editItem}
-            onChangeText={setEditItem}
+            style={styles.input}
+            value={editNome}
+            onChangeText={setEditNome}
+            placeholder="Nome"
           />
           <TextInput
-            style={styles.editInput}
-            placeholder="Quantidade"
-            value={editQuantidade}
-            onChangeText={setEditQuantidade}
-            keyboardType="numeric"
+            style={styles.input}
+            value={editPreco}
+            onChangeText={setEditPreco}
+            placeholder="Preço"
+            keyboardType="decimal-pad"
           />
-          <Button title="Salvar" onPress={() => updateCompra(item.id)} />
+          <TextInput
+            style={styles.input}
+            value={editDescricao}
+            onChangeText={setEditDescricao}
+            placeholder="Descrição"
+          />
+          <Button title="Salvar" onPress={() => atualizarItem(item.id)} />
         </View>
       );
     }
+
+    return (
+      <View style={styles.item}>
+        {item.image ? (
+          <Image source={{ uri: item.image }} style={styles.image} />
+        ) : null}
+        <View style={{ flex: 1 }}>
+          <Text style={styles.itemText}>{item.name}</Text>
+          <Text style={styles.itemText}>R$ {item.price.toFixed(2)}</Text>
+          <Text style={styles.itemDescricao}>{item.description}</Text>
+        </View>
+        <View style={styles.buttonsVertical}>
+          <View style={styles.buttonSpacing}>
+            <Button
+              title="Editar"
+              color="#007bff"
+              onPress={() => {
+                setEditandoId(item.id);
+                setEditNome(item.name);
+                setEditPreco(item.price.toString());
+                setEditDescricao(item.description);
+              }}
+            />
+          </View>
+          <Button
+            title="Excluir"
+            color="#dc3545"
+            onPress={() => deletarItem(item.id)}
+          />
+        </View>
+      </View>
+    );
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Catálogo de Produtos</Text>
+
       <TextInput
         style={styles.input}
-        placeholder="Item para comprar"
-        value={item}
-        onChangeText={setItem}
+        value={nome}
+        onChangeText={setNome}
+        placeholder="Nome do produto"
       />
       <TextInput
         style={styles.input}
-        placeholder="Quantidade"
-        value={quantidade}
-        onChangeText={setQuantidade}
-        keyboardType="numeric"
+        value={preco}
+        onChangeText={setPreco}
+        placeholder="Preço"
+        keyboardType="decimal-pad"
       />
-      <Button title="Adicionar Compra" onPress={addCompra} />
+      <TextInput
+        style={styles.input}
+        value={descricao}
+        onChangeText={setDescricao}
+        placeholder="Descrição"
+      />
+      <View style={styles.buttonSpacing}>
+        <Button title="Adicionar Produto" onPress={adicionarItem} />
+      </View>
+
       <FlatList
-        data={compras}
+        data={catalog}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
-        style={styles.list}
+        style={{ marginTop: 20 }}
       />
-      <StatusBar style="auto" />
     </View>
   );
 }
@@ -159,34 +201,111 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 45,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
     borderWidth: 1,
+    borderColor: '#ccc',
     marginBottom: 10,
-    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 2,
+    elevation: 1,
   },
-  list: {
-    marginTop: 20,
+  buttonSpacing: {
+    marginVertical: 10,
+  },
+  addButton: {
+    backgroundColor: '#2196f3',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   item: {
-    backgroundColor: '#f2f2f2',
-    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.07,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 2,
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 140,
+    borderRadius: 10,
     marginBottom: 10,
-    borderRadius: 5,
+    resizeMode: 'cover',
   },
-  buttons: {
+  itemText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+  },
+  itemDescricao: {
+    fontSize: 14,
+    color: '#777',
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  buttonsVertical: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
+    justifyContent: 'space-around',
+    marginTop: 12,
+    width: '100%',
   },
-  editInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 5,
-    paddingHorizontal: 10,
-  }
+  editarBtn: {
+    backgroundColor: '#1976d2',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  excluirBtn: {
+    backgroundColor: '#d32f2f',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  btnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  itemEditando: {
+    backgroundColor: '#fff9c4',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 2,
+  },
 });
+
+
