@@ -187,6 +187,6 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 11,
   }
 });
