@@ -1,63 +1,68 @@
-import React, {useContext} from "react";
-import {View, Text, Image, StyleSheet, Button} from 'react-native'
+import React, { useContext } from 'react';
+import { View, Text, Image, StyleSheet, Button } from 'react-native';
 
-const CatalogCard = ({ product, onBuyPress }:any) => {
+const CatalogCard = ({product, onBuyPress}: any) => {
     return (
-        <View style={style.card}>
-            <Image
+        <View style={styles.card}>
+            <Image  
                 source={{ uri: product.image }}
-                style={style.image}
+                style={styles.image}
             />
-            <View style={style.Details}>
-                  <Text style={style.name}>{product.name}</Text>
-                  <Text style={style.description}>{product.description}</Text>
-                  <Text style={style.price}>R${product.price.toFixed(2)}</Text>
-                  <View style={style.buttonsContainer}>
-                    <Button 
-                    title="comprar" 
-                    color="#28A745"
-                    onPress={onBuyPress}
-                    />
-
+            <View style={styles.details}>
+                <Text style={styles.name}>{product.name}</Text>
+                <Text style={styles.description}>{product.description}</Text>
+                <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+                <View style={styles.buttonsContainer}>
+                        <Button 
+                            title="Comprar"
+                            color="#28A745"
+                            onPress={onBuyPress}
+                        />
                 </View>
             </View>
-          
         </View>
-    )
+    );
 }
 export default CatalogCard;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
         borderRadius: 8,
         padding: 15,
         marginBottom: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 2},
         shadowOpacity: 0.2,
         shadowRadius: 3,
-        elevation: 2,
+        elevation: 3,
     },
-    image: { 
+    image: {
         width: '100%',
-        height: 150,
+        height: 200,
         borderRadius: 8,
-        marginBottom: 8,
+        borderWidth: 2,
+        borderColor: '#ddd',
     },
-Details:{
-        marginBottom: 8,
-},
-name:{
-
-},
-description:{
-
-},
-price:{
-
-},
-buttonsContainer:{
-
-}
+    details: {
+        paddingHorizontal: 10,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    description: {
+        fontSize: 14,
+        color: '#555',
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#28A745',
+        marginVertical: 10,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
 });
