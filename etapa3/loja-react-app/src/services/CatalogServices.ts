@@ -4,6 +4,7 @@ const { apiUrl } = Constants.expoConfig?.extra || {}; // novo
 
 
 export async function getCatalog(): Promise<any[]> { // alterado
+    console.log(apiUrl);
     try {
         // alterado
         const response = await fetch(`${apiUrl}/api/Catalog`);

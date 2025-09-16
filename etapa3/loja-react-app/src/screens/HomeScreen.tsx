@@ -17,7 +17,7 @@ function HomeScreen({ navigation }: any) { // INCLUIR {navigation}: any
             <Button title="Alternar Tema" color={theme.colors.primary} onPress={toggleTheme}/>
             <Button title="Ir para Detalhes" onPress={ () => navigation.navigate('Details')} />
             <Button title="Login" onPress={ () => navigation.navigate('Login')}/>
-            <Button title="Fake Login" onPress={ () => login('Fake_token')}></Button> 
+            <Button  title="Fake Login" onPress={ () => login('fake_token') }/>
         </View>
     );
 }
