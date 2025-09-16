@@ -1,16 +1,19 @@
-const API_URL = 'http://10.81.205.20:5000';
+import Constants from 'expo-constants'; // novo
+
+const { apiUrl } = Constants.expoConfig?.extra || {}; // novo
 
 
-export async function getCatalog(): Promise<any> {
+export async function getCatalog(): Promise<any[]> { // alterado
     try {
-        const response = await fetch(`${API_URL}/api/catalog`)
+        // alterado
+        const response = await fetch(`${apiUrl}/api/Catalog`);
         const data = await response.json();
         // console.log(data);
         // return Promise.resolve(data.catalog);
-        return data.catalog;
+        return data.catalog; // incluido / alterado
     }
-    catch (error){
-         console.error(error);
-         return Promise.reject('Erro ao obter produtos')
+    catch (error) {
+        console.error(error);
+        return Promise.reject('Erro ao obter produtos');
     }
 }

@@ -1,70 +1,60 @@
-import React, { use, useContext, useEffect } from 'react';
-import { useState } from 'react';
-import { View, FlatList, StyleSheet, Text, Button } from 'react-native';
+import React, { useContext, useState, useEffect } from "react"; // alterado
+import { View, Text, FlatList, StyleSheet} from 'react-native';
 
-import CatalogCard from './CatalogCard';
-import { getCatalog } from '../../services/CatalogServices';
+import CatalogCard from "./CatalogCard";
 
-const CatalogScreen = ({ navigation }: any) => {
-  const [catalog, setCatalog] = useState<any[]>([]);
-  
-  useEffect(() => {
-    const fetchCatalog = async () => {
-     try {
-       const data = await getCatalog();
-       setCatalog(data);
-     } catch (error) {
-       console.error('Não encontrado:', error);
-     }
-    }
-    fetchCatalog();
-    console.log(catalog);
-    
-  }, []);
+// Todo: importar o serviço de recuperação do catalog
+import { getCatalog } from '../../services/CatalogServices'; // novo
 
-  const loadCatalog = async () => {
-    let catalogItems = await getCatalog();
-    setCatalog(catalogItems);
-  };
+const CatalogScreen = ({navigation} : any) => {
+    const [catalog, setCatalog] = useState<any[]>([]); // novo
 
-  // useEffect(() => {
-  //     const catalogItems = async() => {
-  //     let catalogItems = await getCatalog();
-  //     console.log('catalog');
-  //     console.log('catalogItems');
-  //     setCatalog(catalogItems);
-  //     }
-  //     catalogItems();
-  //     console.log(catalog);
-  // }, [])
+    // bloco novo
+    useEffect(() => {
+        const fetchCatalog = async () => {
+            try {
+                const data = await getCatalog();
+                setCatalog(data);
+            }
+            catch (error) {
+                console.error('Erro ao buscar o catálogo:', error);
+            }
+        };
+        fetchCatalog();
+        console.log(catalog);
+    }, []);
 
-  const handleBuyPress = (product: any) => {
-    console.log(product);
-  };
+    const handleBuyPress = (product : any) => {
+        // 1 - Adicionar ao carrinho
+        // 2 - Ir para a tela do carrinho
+        console.log(product);
+    };
 
-  const renderItem = ({ item }: any) => (
-    <CatalogCard product={item} onBuyPress={() => handleBuyPress(item)} />
-  );
+    const renderItem = ({ item }: any) => ( // alterado
+        <CatalogCard 
+            product={item} // alterado
+            onBuyPress={() => handleBuyPress(item)} // alterado
+        />
+    );
 
-  return (
-    <View style={styles.container}>
-      <Text>Menu</Text>
-      <FlatList
-        data={catalog}
-        renderItem={renderItem}
-        keyExtractor={(item: any) => item.id.toString()}
-      />
-      <Button title="Load Catalog" onPress={loadCatalog} />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Text>Menu</Text>
+            <FlatList 
+                data={catalog} // alterado
+                renderItem={renderItem}
+                keyExtractor={(item: any) => item.id.toString()} // alterado
+            />
+        </View>
+    );
 };
 
 export default CatalogScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-    backgroundColor: 'f8f8f8',
-  },
+    container: {
+        flex: 1,
+        padding: 15,
+        backgroundColor: '#F8F8F8',
+    }
 });
