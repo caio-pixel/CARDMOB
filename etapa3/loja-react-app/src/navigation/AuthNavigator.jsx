@@ -26,7 +26,9 @@ function AuthTabNavigator() {
 
 function AuthStackNavigator() {
   return (
+    
     <Stack.Navigator>
+     
       <Stack.Screen
         name="Tabs"
         component={AuthTabNavigator}
@@ -39,6 +41,7 @@ function AuthStackNavigator() {
       />
     </Stack.Navigator>
   );
+  
 }
 
 export default function AuthNavigator() {

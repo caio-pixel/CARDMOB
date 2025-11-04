@@ -4,7 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 
 import AppNavigator from "./AppNavigator";
 import AuthNavigator from "./AuthNavigator";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 
 export default function RootNavigator() {
