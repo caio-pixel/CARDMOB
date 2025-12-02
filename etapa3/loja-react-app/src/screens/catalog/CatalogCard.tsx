@@ -21,7 +21,7 @@ const CatalogCard = ({product, onBuyPress}: any) => {
                 <View style={styles.buttonsContainer}>
                         <Button 
                             title="Comprar"
-                            color="#28A745"
+                            color="#28A744"
                             onPress={onBuyPress}
                         />
                         {userData.is_admin ? (
