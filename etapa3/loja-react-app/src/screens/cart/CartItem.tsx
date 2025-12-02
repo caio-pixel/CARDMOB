@@ -19,7 +19,7 @@ const CartItem = ({ item }: any) => {
                 <Text style={styles.name}>{item.name}</Text>
                 <View style={styles.quantity}>
                     <Text style={styles.price}>R$ {(item.price * item.quantity).toFixed(2)}</Text>
-                    <TouchableOpacity onPress={() => addToCart(item, -1)} style={styles.button}>
+                    <TouchableOpacity onPress={() => addToCart(item,  -1)} style={styles.button}>
                         <Text style={styles.buttonText}>-</Text>
                     </TouchableOpacity>
                     <Text style={styles.quantityValue}>{item.quantity}</Text>

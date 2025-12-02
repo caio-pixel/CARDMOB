@@ -6,7 +6,19 @@ import { getOrders, updateOrderStatus } from "../../services/orderService";
 
 function ManagerOrdersScreen({ navigation }: any) {
     const { user, userData } = useAuth();
-    const [ordersList, setOrdersList] = useState([]);
+    const [ordersList, setOrdersList] = useState<Array<{
+        id: number;
+        customerName: string;
+        customerAddress: string;
+        customerPhone: string;
+        totalPrice: number;
+        status: string;
+        orderOffering: Array<{
+            offering: { name: string };
+            quantity: number;
+            subtotal: number;
+        }>;
+    }>>([]);
 
     const loadOrders = async () => {
         const data = await getOrders(user);

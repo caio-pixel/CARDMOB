@@ -5,8 +5,8 @@ const { apiUrl } = Constants.expoConfig?.extra || {};
 export async function requestProfileById(id: number): Promise<[]> {
     try {
         const response = await fetch(`${apiUrl}/api/users/${id}`);
-        let data = response.json();
-        if (data.image == null) {
+        let data = await response.json();
+        if (!data.image) {
             data.image = `${apiUrl}/uploads/placeholder.png`;
         }
         return Promise.resolve(data);
